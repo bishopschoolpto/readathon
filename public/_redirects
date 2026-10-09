@@ -1,0 +1,4 @@
+# Netlify / Cloudflare Pages rewrites (status 200 = serve without changing the URL).
+/s/*    /student.html  200
+/d/*    /donate.html   200
+/admin  /admin.html    200

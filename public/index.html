@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Readathon</title>
+  <link rel="icon" href="/img/paw.svg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <img src="/img/paw.svg" alt="">
+      <a href="/" id="site-title">Readathon</a>
+      <span class="spacer"></span>
+      <a href="/admin" class="tag">Organizers</a>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="loading"><span class="spinner"></span> Loading…</div>
+  </main>
+
+  <footer class="site-footer">Made with ❤️ by the PTO</footer>
+
+  <script src="/config.js"></script>
+  <script src="/js/common.js"></script>
+  <script>
+    (function () {
+      var app = document.getElementById('app');
+      RA.api('home').then(function (d) {
+        var s = d.settings;
+        document.title = s.readathonTitle;
+        document.getElementById('site-title').textContent = s.readathonTitle;
+        var dates = s.startDate && s.endDate
+          ? RA.formatDate(s.startDate, { month: 'long', day: 'numeric' }) + ' – ' + RA.formatDate(s.endDate, { month: 'long', day: 'numeric', year: 'numeric' })
+          : '';
+        var goal = s.schoolGoalMinutes;
+        var pct = RA.percent(d.totalMinutes, goal);
+        var html =
+          '<section class="hero"><img class="paw" src="/img/paw.svg" alt="">' +
+          '<h1>' + RA.esc(s.readathonTitle) + '</h1>' +
+          '<p class="meta">' + RA.esc([s.schoolName, dates].filter(Boolean).join(' · ')) + '</p>' +
+          '<p>Every minute counts! Students: use the private reading-log link from your teacher to log your minutes and books.</p></section>' +
+          '<div class="stats">' +
+          '<div class="stat"><div class="value">' + RA.fmt(d.totalMinutes) + '</div><div class="label">minutes read school-wide</div></div>' +
+          '<div class="stat"><div class="value">' + RA.fmt(Math.round(d.totalMinutes / 60)) + '</div><div class="label">hours of reading</div></div>' +
+          '<div class="stat"><div class="value">' + RA.fmt(d.readers) + '</div><div class="label">students reading</div></div></div>';
+        if (goal) {
+          html += '<div class="card"><div class="row"><strong class="grow">School goal: ' + RA.fmt(goal) + ' minutes</strong>' +
+            '<span class="muted">' + pct + '%</span></div><div class="progress"><span style="width:' + pct + '%"></span></div></div>';
+        }
+        html += '<div class="grid two"><section class="card"><h2>By grade</h2><div class="table-wrap"><table><thead><tr><th>Grade</th><th class="num">Readers</th><th class="num">Minutes</th></tr></thead><tbody>' +
+          d.grades.map(function (g) {
+            return '<tr><td>' + RA.esc(RA.gradeLabel(g.grade) || '—') + '</td><td class="num">' + RA.fmt(g.readers) + ' / ' + RA.fmt(g.students) +
+              '</td><td class="num">' + RA.fmt(g.minutes) + '</td></tr>';
+          }).join('') + '</tbody></table></div></section>';
+        if (d.classes) {
+          html += '<section class="card"><h2>Class leaderboard</h2><div class="table-wrap"><table><thead><tr><th>#</th><th>Class</th><th class="num">Minutes</th></tr></thead><tbody>' +
+            d.classes.map(function (c, i) {
+              return '<tr><td>' + (i + 1) + '</td><td>' + RA.esc(c.teacher || RA.gradeLabel(c.grade)) +
+                ' <span class="muted small">' + RA.esc(c.teacher ? RA.gradeLabel(c.grade) : '') + '</span></td><td class="num">' + RA.fmt(c.minutes) + '</td></tr>';
+            }).join('') + '</tbody></table></div></section>';
+        }
+        app.innerHTML = html + '</div>';
+      }).catch(function (err) { RA.showError(app, err.message); });
+    })();
+  </script>
+</body>
+</html>

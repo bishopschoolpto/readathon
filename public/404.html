@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Readathon</title>
+  <script>
+    // Fallback for static hosts without rewrites (e.g. GitHub Pages): map pretty URLs to pages.
+    (function () {
+      var m = location.pathname.match(/^\/(s|d)\/([^/]+)\/?$/);
+      if (m) location.replace((m[1] === 's' ? '/student.html#' : '/donate.html?c=') + encodeURIComponent(m[2]));
+      else if (/^\/admin\/?$/.test(location.pathname)) location.replace('/admin.html');
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <main>
+    <div class="card" style="text-align:center">
+      <img src="/img/paw.svg" alt="" width="80">
+      <h1>Page not found</h1>
+      <p><a href="/">Go to the readathon home page</a></p>
+    </div>
+  </main>
+</body>
+</html>

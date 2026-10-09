@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Support a Reader</title>
+  <link rel="icon" href="/img/paw.svg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <img src="/img/paw.svg" alt="">
+      <a href="/" id="site-title">Readathon</a>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="loading"><span class="spinner"></span> Loading…</div>
+  </main>
+
+  <template id="page">
+    <section class="hero">
+      <img class="paw" src="/img/paw.svg" alt="">
+      <h1>Support <span data-bind="name"></span>'s reading!</h1>
+      <p class="meta" data-bind="meta"></p>
+      <p data-bind="intro"></p>
+    </section>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="card" id="goal-card" hidden>
+      <div class="row"><strong class="grow" data-bind="goalText"></strong><span class="muted" data-bind="goalPct"></span></div>
+      <div class="progress"><span data-bind="goalBar"></span></div>
+    </div>
+
+    <section class="card" id="donate-card">
+      <h2>Make a donation</h2>
+      <div class="widget" id="widget"></div>
+    </section>
+
+    <section id="reading" hidden>
+      <div class="card" id="current-card" hidden>
+        <h2>Currently reading</h2>
+        <div id="current-book"></div>
+      </div>
+      <div class="card" id="shelf-card" hidden>
+        <h2><span data-bind="firstName"></span>'s bookshelf</h2>
+        <ul class="shelf" id="shelf"></ul>
+      </div>
+    </section>
+  </template>
+
+  <footer class="site-footer">Thank you for supporting our readers! 📚</footer>
+
+  <script src="/config.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/donate.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Readathon Organizer</title>
+  <link rel="icon" href="/img/paw.svg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <img src="/img/paw.svg" alt="">
+      <a href="/" id="site-title">Readathon</a>
+      <span class="spacer"></span>
+      <span class="tag" id="who">Organizer</span>
+      <button class="btn btn-small" id="logout" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="login" class="card" style="max-width:440px; margin:2rem auto" hidden>
+      <h2>Organizer sign in</h2>
+      <p class="muted small">Sign in with a Google account that can edit the readathon data spreadsheet.
+        To add an organizer, share that spreadsheet with them as an editor.</p>
+      <div id="google-button" style="min-height:44px"></div>
+      <form id="dev-signin" hidden>
+        <div class="notice small">Local dev server: no Google sign-in. Use an email from <code>DEV_ADMINS</code>.</div>
+        <div class="field">
+          <label for="dev-email">Email</label>
+          <input id="dev-email" type="text" value="organizer@example.com" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+      <p class="status err" id="login-status" role="alert"></p>
+    </section>
+
+    <div id="dash" hidden>
+      <nav class="tabs no-print" role="tablist">
+        <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-tab="students" aria-selected="false">Students &amp; links</button>
+        <button role="tab" data-tab="settings" aria-selected="false">Settings</button>
+        <button role="tab" data-tab="widget" aria-selected="false">Donation widget</button>
+      </nav>
+
+      <section data-panel="overview">
+        <div class="stats" id="overview-stats"></div>
+        <div class="card">
+          <h2>Classes</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Grade</th><th>Teacher</th><th class="num">Students</th><th class="num">Readers</th><th class="num">Minutes</th><th class="num">Avg / reader</th></tr></thead>
+              <tbody id="class-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section data-panel="students" hidden>
+        <div class="card no-print">
+          <div class="row">
+            <div class="grow">
+              <h2 style="margin:0">Students &amp; links</h2>
+              <p class="muted small" style="margin:0">Each student has a <strong>private log link</strong> (only for them) and a <strong>donation link</strong> (to share).</p>
+            </div>
+            <button class="btn btn-gold" id="sync">Sync roster</button>
+            <button class="btn" id="export">Download CSV</button>
+            <button class="btn" id="print">Print link slips</button>
+          </div>
+          <div id="sync-notice"></div>
+          <div class="row" style="margin-top:1rem">
+            <input type="search" id="student-search" class="grow" placeholder="Search by name, teacher, grade or code">
+            <select id="student-class" style="width:auto"><option value="">All classes</option></select>
+          </div>
+        </div>
+        <div class="card no-print">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Student</th><th>Grade</th><th>Teacher</th><th class="num">Minutes</th><th class="num">Books</th><th>Code</th><th>Links</th></tr></thead>
+              <tbody id="student-rows"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="slips"></div>
+      </section>
+
+      <section data-panel="settings" hidden>
+        <form class="card" id="settings-form">
+          <h2>Readathon settings</h2>
+          <div class="grid two">
+            <div class="field"><label for="s-title">Readathon title</label><input id="s-title" name="readathonTitle" type="text"></div>
+            <div class="field"><label for="s-school">School name</label><input id="s-school" name="schoolName" type="text"></div>
+            <div class="field"><label for="s-start">Start date</label><input id="s-start" name="startDate" type="date"></div>
+            <div class="field"><label for="s-end">End date</label><input id="s-end" name="endDate" type="date"></div>
+            <div class="field"><label for="s-goal">School goal (minutes, 0 = none)</label><input id="s-goal" name="schoolGoalMinutes" type="number" min="0"></div>
+            <div class="field"><label for="s-max">Max minutes per day</label><input id="s-max" name="maxMinutesPerDay" type="number" min="1"></div>
+            <div class="field">
+              <label for="s-nameformat">Student name on donation pages</label>
+              <select id="s-nameformat" name="nameFormat">
+                <option value="firstLastInitial">First name + last initial (Avery E.)</option>
+                <option value="first">First name only (Avery)</option>
+                <option value="full">Full name (Avery Example)</option>
+              </select>
+            </div>
+            <div class="field"><label for="s-site">Site URL (used for {donationUrl})</label><input id="s-site" name="siteUrl" type="text"></div>
+          </div>
+          <label class="toggle"><input type="checkbox" name="editsLocked"> Lock reading logs (students can no longer change minutes)</label>
+          <label class="toggle"><input type="checkbox" name="homeShowClassTotals"> Show the class leaderboard on the home page</label>
+          <h3 style="margin-top:1rem">Defaults for new donation pages</h3>
+          <p class="muted small">Students can change these on their own page.</p>
+          <label class="toggle"><input type="checkbox" name="defaultShowReadingList"> Show reading list</label>
+          <label class="toggle"><input type="checkbox" name="defaultShowTotalMinutes"> Show the student's total minutes</label>
+          <label class="toggle"><input type="checkbox" name="defaultShowClassMinutes"> Show the class's total minutes</label>
+          <div class="row" style="margin-top:1rem">
+            <button class="btn btn-primary" type="submit">Save settings</button>
+            <span class="status" id="settings-status" role="status"></span>
+          </div>
+        </form>
+      </section>
+
+      <section data-panel="widget" hidden>
+        <div class="grid two">
+          <form class="card" id="widget-form">
+            <h2>Donation widget HTML</h2>
+            <p class="muted small">Paste the embed code from your donation platform (Givebutter, Zeffy, PayPal, a plain link…). It appears on every student's donation page.</p>
+            <div class="field"><textarea id="widget-html" spellcheck="false" aria-label="Donation widget HTML"></textarea></div>
+            <div class="row">
+              <button class="btn btn-primary" type="submit">Save widget</button>
+              <button class="btn" type="button" id="widget-reset">Restore example</button>
+              <span class="status" id="widget-status" role="status"></span>
+            </div>
+            <div class="vars small" style="margin-top:1rem">
+              <p><strong>Template values</strong> — <code>{studentName}</code> is HTML-escaped; add <code>:url</code> inside links (<code>{studentName:url}</code>) or <code>:json</code> inside scripts (<code>{studentName:json}</code> gives a quoted string).</p>
+              <p id="var-list"></p>
+            </div>
+          </form>
+          <div class="card">
+            <div class="row">
+              <h2 class="grow" style="margin:0">Preview</h2>
+              <select id="preview-student" style="width:auto" aria-label="Preview as student"></select>
+            </div>
+            <p class="muted small">Scripts run in a sandbox here; on the real page they run normally.</p>
+            <iframe class="preview-frame" id="preview" sandbox="allow-scripts allow-popups allow-forms" title="Widget preview"></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/config.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

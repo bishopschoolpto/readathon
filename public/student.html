@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The URL is a private link; keep it out of Referer headers. -->
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>My Reading Log</title>
+  <link rel="icon" href="/img/paw.svg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <img src="/img/paw.svg" alt="">
+      <a href="/" id="site-title">Readathon</a>
+      <span class="spacer"></span>
+      <span class="tag">My reading log</span>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="loading"><span class="spinner"></span> Loading your reading log…</div>
+  </main>
+
+  <template id="page">
+    <section class="hero">
+      <img class="paw" src="/img/paw.svg" alt="">
+      <h1>Hi, <span data-bind="firstName"></span>! 📚</h1>
+      <p class="meta" data-bind="meta"></p>
+      <p class="small muted">This is your private reading log. Bookmark it, and don't share it — share your donation page instead.</p>
+    </section>
+
+    <div id="banner"></div>
+
+    <div class="stats">
+      <div class="stat"><div class="value" data-bind="totalMinutes">0</div><div class="label">minutes I've read</div></div>
+      <div class="stat"><div class="value" data-bind="daysRead">0</div><div class="label">days I've read</div></div>
+      <div class="stat"><div class="value" data-bind="booksFinished">0</div><div class="label">books finished</div></div>
+      <div class="stat"><div class="value" data-bind="classMinutes">0</div><div class="label">minutes my class has read</div></div>
+    </div>
+
+    <div class="card" id="goal-card" hidden>
+      <div class="row"><strong class="grow">My goal: <span data-bind="goal"></span> minutes</strong><span class="muted" data-bind="goalPct"></span></div>
+      <div class="progress"><span data-bind="goalBar"></span></div>
+    </div>
+
+    <div class="grid two">
+      <section class="card" id="today-card">
+        <h2>Today's reading</h2>
+        <p class="muted small" data-bind="todayLabel"></p>
+        <form id="today-form" class="today-box">
+          <input id="today-minutes" type="number" min="0" step="1" inputmode="numeric" aria-label="Minutes read today">
+          <span class="muted">minutes</span>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+        <div class="quick" id="quick-add">
+          <button class="btn btn-small btn-gold" type="button" data-add="10">+10</button>
+          <button class="btn btn-small btn-gold" type="button" data-add="15">+15</button>
+          <button class="btn btn-small btn-gold" type="button" data-add="20">+20</button>
+          <button class="btn btn-small btn-gold" type="button" data-add="30">+30</button>
+        </div>
+        <p class="status" id="today-status" role="status"></p>
+      </section>
+
+      <section class="card">
+        <h2>Currently reading</h2>
+        <div id="current-book"></div>
+        <form id="current-form" hidden>
+          <div class="field">
+            <label for="current-title">Book title</label>
+            <input id="current-title" type="text" autocomplete="off" maxlength="200" placeholder="Start typing to search…">
+            <ul class="suggest" id="current-suggest" hidden></ul>
+          </div>
+          <div class="field">
+            <label for="current-author">Author <span class="muted small">(optional)</span></label>
+            <input id="current-author" type="text" autocomplete="off" maxlength="150">
+          </div>
+          <div class="row">
+            <button class="btn btn-primary" type="submit">Save book</button>
+            <button class="btn btn-ghost" type="button" id="current-cancel">Cancel</button>
+          </div>
+        </form>
+        <p class="status" id="current-status" role="status"></p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>My reading log</h2>
+      <p class="muted small">Forgot a day? Fix it here. Changes save automatically.</p>
+      <ul class="days" id="days"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Books I've read</h2>
+      <ul class="books" id="finished-books"></ul>
+      <form id="finished-form" class="field" style="margin-top:1rem">
+        <label for="finished-title">Add a book I finished</label>
+        <div class="row">
+          <div class="grow">
+            <input id="finished-title" type="text" autocomplete="off" maxlength="200" placeholder="Title — start typing to search">
+            <ul class="suggest" id="finished-suggest" hidden></ul>
+          </div>
+          <input id="finished-author" class="grow" type="text" autocomplete="off" maxlength="150" placeholder="Author (optional)">
+          <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+      </form>
+      <p class="status" id="finished-status" role="status"></p>
+    </section>
+
+    <section class="card">
+      <h2>My donation page</h2>
+      <p>Share this link with family and friends who want to support your reading:</p>
+      <div class="link-box">
+        <code id="donation-link"></code>
+        <button class="btn btn-small" type="button" id="copy-donation">Copy</button>
+        <a class="btn btn-small btn-ghost" id="open-donation" target="_blank" rel="noopener">Open</a>
+      </div>
+      <h3 style="margin-top:1.25rem">What shows on my donation page</h3>
+      <form id="prefs-form">
+        <label class="toggle"><input type="checkbox" name="showReadingList"> Show my reading list</label>
+        <label class="toggle"><input type="checkbox" name="showTotalMinutes"> Show how many minutes I've read</label>
+        <label class="toggle"><input type="checkbox" name="showClassMinutes"> Show how many minutes my class has read</label>
+        <div class="field" style="max-width:260px; margin-top:.5rem">
+          <label for="goal-minutes">My reading goal (minutes)</label>
+          <input id="goal-minutes" name="goalMinutes" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 600">
+        </div>
+      </form>
+      <p class="status" id="prefs-status" role="status"></p>
+    </section>
+  </template>
+
+  <footer class="site-footer">Made with ❤️ by the PTO</footer>
+
+  <script src="/config.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/booksearch.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>
