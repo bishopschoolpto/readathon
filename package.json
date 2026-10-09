@@ -6,7 +6,7 @@
     "dev": "node dev/server.js",
     "test": "node --test tests/unit/core.test.js",
     "test:ui": "playwright test",
-    "gas:login": "clasp login",
+    "gas:login": "clasp login --no-localhost",
     "gas:create": "clasp create-script --type standalone --title \"Readathon API\" --rootDir apps-script",
     "gas:push": "clasp push --force",
     "gas:deploy": "clasp create-deployment --description \"Readathon API\"",
