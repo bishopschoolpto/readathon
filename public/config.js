@@ -3,6 +3,6 @@
 //   match the GOOGLE_CLIENT_ID script property. Client IDs are not secret.
 // The local dev server (npm run dev) serves its own version of this file.
 window.READATHON_CONFIG = {
-  apiUrl: 'https://script.google.com/macros/s/REPLACE_WITH_DEPLOYMENT_ID/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyTY8HNY1eMpmVgUvF_mlPWiEajmafQjBeOSEwoG-B0hAzCZblGSW13awHJVeNQkCFd8A/exec',
   googleClientId: '69541499158-2dvtvg7bnu311kjdkrpage5j82clpued.apps.googleusercontent.com',
 };
