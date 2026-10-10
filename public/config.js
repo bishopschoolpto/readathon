@@ -4,5 +4,5 @@
 // The local dev server (npm run dev) serves its own version of this file.
 window.READATHON_CONFIG = {
   apiUrl: 'https://script.google.com/macros/s/REPLACE_WITH_DEPLOYMENT_ID/exec',
-  googleClientId: 'REPLACE_WITH_CLIENT_ID.apps.googleusercontent.com',
+  googleClientId: '69541499158-2dvtvg7bnu311kjdkrpage5j82clpued.apps.googleusercontent.com',
 };
